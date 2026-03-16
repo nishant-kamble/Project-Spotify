@@ -284,7 +284,6 @@ input #songSearch{
 
 .songlist .info {
     font-size: 12px;
-
 }
 
 .PlayNow {
@@ -327,6 +326,7 @@ input #songSearch{
 .songtime {
     color: white;
     padding: 7px 12px;
+    font-weight: 700px
 }
 
 .abovebar {
