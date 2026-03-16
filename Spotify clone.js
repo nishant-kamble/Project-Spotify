@@ -23,8 +23,8 @@ function cleanUrl(url) {
 async function getSongsFromFolder(folderPath = "") {
 
     let url = folderPath
-        ? `http://172.27.251.79:3000/songs/${folderPath}/`
-        : `http://172.27.251.79:3000/songs/`;
+        ? `/songs/${folderPath}/`
+        : `/songs/`;
 
     let response = await fetch(url);
     let text = await response.text();
