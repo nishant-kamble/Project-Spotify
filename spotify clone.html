@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify - Web Player: Music for everyone</title>
+    <link rel="stylesheet" href="spotify clone.css">
+    <link rel="stylesheet" href="utility class.css">
+</head>
+
+<body>
+    <div class="container-flex">
+        <div class="left bg-black">
+            <div class="home bg-grey rounded m-1 p-1">
+                <div class="logo"><img class="invert" src="svg/spotify.svg" alt="logo" width="30px"
+                        height="30px">Spotify<span>&reg;</span></div>
+                <ul>
+                    <li><img class="invert" src="svg/home.svg" alt="Home" width="30px" height="30px">Home</li>
+                    <li><img class="invert" src="svg/Search.svg" alt="home" width="30px" height="30px">Search</li>
+                </ul>
+            </div>
+            <div class="library bg-grey rounded m-1 p-1 ">
+                <div class="heading">
+                    <h3>Your library</h3>
+                    <img src="svg/plus.svg" alt="plus" width="30px" height="30px">
+                </div>
+                <div class="songlist">
+                    <ul>
+
+                    </ul>
+                </div>
+                <div class="footer">
+                    <div><a href="https://www.spotify.com/jp/legal/"><span>Legal</span></a></div>
+                    <div><a href="https://www.spotify.com/jp/privacy/"><span>Privacy Center</span></a></div>
+                    <div><a href="https://www.spotify.com/jp/legal/privacy-policy/"><span>Privacy Policy</span></a>
+                    </div>
+                    <div><a href="https://www.spotify.com/jp/legal/cookies-policy/"><span>Cookies</span></a></div>
+                    <div><a href="https://www.spotify.com/jp/legal/privacy-policy/#s3"><span>About Ads</span></a></div>
+                    <div><a href="https://www.spotify.com/jp/accessibility/"><span>Accessibility</span></a></div>
+                </div>
+            </div>
+        </div>
+        <div class="right rounded m-1 bg-grey">
+            <div class="header">
+                <!-- Hamburger button inside header -->
+                <div class="hamburger" id="hamburger">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <!-- Sidebar overlay -->
+                <div class="overlay" id="overlay"></div>
+                <div class="nav">
+                    <div class="Search">
+                        <h5>Search</h5>
+                        <img src="svg/search-02-stroke-rounded.svg" alt="">
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="signupbtn">Sign up</button>
+                    <button class="loginbtn">Log in</button>
+                </div>
+            </div>
+            <div class="spotifyplaylist">
+                <h1>Spotify playlist</h1>
+                <div class="cardcontainer">
+                    <div class="card" data-folder="Dhurandhar">
+                        <div style="width: 50px;height:40px;" opacity: 1;top: 190px; class="play">
+                            <img src="svg/play-stroke-rounded.svg" alt="" height="35px" width="35px">
+                        </div>
+                        <img src="https://i.scdn.co/image/ab67706f000000022b117d6dc96345bedf9adc1b" alt="">
+                        <h3>Dhurandhar</h3>
+                        <p>Hottest Hindi music that India is listening</p>
+                    </div>
+                    <div class="card" data-folder="Punjabi">
+                        <div style="width: 50px;height:40px;" opacity: 1;top: 190px; class="play">
+                            <img src="svg/play-stroke-rounded.svg" alt="" height="35px" width="35px">
+                        </div>
+                        <img src="https://i.scdn.co/image/ab67706f000000022b117d6dc96345bedf9adc1b" alt="">
+                        <h3>Punjabi</h3>
+                        <p>Beats of punjab</p>
+                    </div>
+                    <div class="card" data-folder="Sita-Ram">
+                        <div style="width: 50px;height:40px;" opacity: 1;top: 190px; class="play">
+                            <img src="svg/play-stroke-rounded.svg" alt="" height="35px" width="35px">
+                        </div>
+                        <img src="https://i.scdn.co/image/ab67706f000000022b117d6dc96345bedf9adc1b" alt="">
+                        <h3>Sita-Ram</h3>
+                        <p>Tamil Romantic Melodies</p>
+                    </div>
+                    <div class="card" data-folder="English hits">
+                        <div style="width: 50px;height:40px;" opacity: 1;top: 190px; class="play">
+                            <img src="svg/play-stroke-rounded.svg" alt="" height="35px" width="35px">
+                        </div>
+                        <img src="https://i.scdn.co/image/ab67706f000000022b117d6dc96345bedf9adc1b" alt="">
+                        <h3>English hits</h3>
+                        <p>Top 10 trending english hits</p>
+                    </div>
+                </div>
+                <div class="playerbar">
+                    <div class="seekbar">
+                        <div class="progress"></div>
+                        <div class="circle"></div>
+                    </div>
+                    <div class="abovebar">
+                        <div class="songinfo"></div>
+                        <div class="playbtn">
+                            <img id="previous" src="svg/previous-stroke-rounded.svg" alt="previous" width="30px"
+                                height="30px">
+                            <img id="play" src="svg/play-circle-stroke-rounded.svg" alt="playbutton playbar"
+                                width="30px" height="30px">
+                            <img id="next" src="svg/next-stroke-rounded.svg" alt="Next" width="30px" height="30px">
+                        </div>
+                        <div class="songtime">00:00 / 00:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="spotify clone.js"></script>
+    
+</body>
+
+</html>

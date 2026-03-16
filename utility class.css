@@ -1,0 +1,86 @@
+.border {
+    border: 2px, solid red;
+    margin: 3px;
+    height: 100px;
+}
+
+.logo{
+    display: flex;
+    font-size: 18px;
+    font-weight: bold;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 3px;
+}
+
+.logo span{
+    display: flex;
+    font-size: 12px;
+    font-weight: bold;
+    justify-content: flex-start;
+}
+
+.container-flex {
+    display: flex;
+    justify-content: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.bg-black{
+    background-color: rgb(5, 5, 5);
+    color: white;
+}
+
+.invert{
+    filter: invert();
+}
+
+.bg-grey{
+background-color: rgb(15, 15, 15);
+}
+
+.rounded{
+border-radius: 10px;
+}
+
+.m-1{
+    margin: 5px;
+}
+
+.p-1{
+    padding: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+/* Hide scrollbar on mobile (width <= 768px) */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Optional: for Firefox */
+    * {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+}
