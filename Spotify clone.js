@@ -1,131 +1,280 @@
-console.log("Let's write javascript");
+console.log("lets write javascript");
 
-let audio = null;
-let currentSongName = "";
-let playButton = null;
+let audio;
+let currentSongName;
+let playButton;
 let playlist = [];
 let currentIndex = -1;
 
 // ----------------------
-// Fetch songs
+// Utility: clean URL
 // ----------------------
-async function getSongsFromFolder(folderName = "") {
-    const res = await fetch("/songs.json");
-    const data = await res.json();
+function cleanUrl(url) {
+    return decodeURIComponent(url)
+        .replace(/\\/g, "/")
+        .replace(/%5C/g, "")
+        .replace(/%20/g, " ");
 
-    return folderName ? (data[folderName] || []) : (data.songs || []);
 }
 
 // ----------------------
-// Load folder
+// Fetch songs from folder
+// ----------------------
+async function getSongsFromFolder(folderPath = "") {
+
+    let url = folderPath
+        ? `/songs/${folderPath}/`
+        : `/songs/`;
+
+    let response = await fetch(url);
+    let text = await response.text();
+
+    let div = document.createElement("div");
+    div.innerHTML = text;
+
+    let links = div.getElementsByTagName("a");
+
+    let songs = [];
+
+    for (let link of links) {
+        if (link.href.endsWith(".mp3")) {
+
+            let url = cleanUrl(link.href);
+            let relativePath = url.split("/songs/")[1];
+
+            songs.push(relativePath);
+        }
+    }
+
+    return songs;
+}
+
+// ----------------------
+// Load songs when card clicked
 // ----------------------
 async function loadFolder(folderName) {
+
     playlist = await getSongsFromFolder(folderName);
 
-    const ul = document.querySelector(".songlist ul");
-    ul.innerHTML = "";
+    const songUl = document.querySelector(".songlist ul");
 
-    playlist.forEach((song, i) => {
-        const name = song.split("/").pop();
+    songUl.innerHTML = "";
 
-        ul.insertAdjacentHTML("beforeend", `
-            <li data-song="${folderName}/${song}">
-                <div>${name}</div>
+    playlist.forEach((songPath, index) => {
+
+        const displayName = songPath.split("/").pop();
+
+        songUl.insertAdjacentHTML("beforeend", `
+            <li data-song="${songPath}">
+                <img class="invert" src="svg/music-note-03-stroke-rounded.svg" height="24px">
+                <div class="info">
+                    <div>${displayName}</div>
+                    <div></div>
+                </div>
+                <div class="PlayNow">
+                    <span>Play Now</span>
+                    <img class="invert" src="svg/play-circle-stroke-rounded.svg" height="24px">
+                </div>
             </li>
         `);
+
     });
 
     attachSongEvents();
-    openSidebar();
 }
 
 // ----------------------
 // Play music
 // ----------------------
-function playmusic(songPath, btn = null) {
+function playmusic(songPath, playBtnElement) {
 
-    if (audio) audio.pause();
+    if (currentSongName === songPath) {
+
+        if (audio.paused) {
+            audio.play();
+            playBtnElement.src = "svg/pause-stroke-rounded.svg";
+            playbarPlay.src = "svg/pause-stroke-rounded.svg";
+        } else {
+            audio.pause();
+            playBtnElement.src = "svg/play-circle-stroke-rounded.svg";
+            playbarPlay.src = "svg/play-circle-stroke-rounded.svg";
+        }
+
+        return;
+    }
+
+    if (audio) {
+        audio.pause();
+
+        if (playButton)
+            playButton.src = "svg/play-circle-stroke-rounded.svg";
+    }
 
     audio = new Audio(`songs/${songPath}`);
     audio.play();
 
     currentSongName = songPath;
-    playButton = btn;
+    playButton = playBtnElement;
 
-    showPlayerBar();
-
-    document.querySelector(".songinfo").innerText =
-        songPath.split("/").pop();
+    playBtnElement.src = "svg/pause-stroke-rounded.svg";
+    playbarPlay.src = "svg/pause-stroke-rounded.svg";
 
     attachTimeUpdate();
 
-    audio.onended = () => nextSong();
+    const songInfo = document.querySelector(".playerbar .songinfo");
+
+    if (songInfo)
+        songInfo.innerText = songPath.split("/").pop();
+
+    audio.onended = () => {
+        playbarNext.click();
+    };
 }
 
 // ----------------------
-// Attach song clicks
+// Attach song click events
 // ----------------------
 function attachSongEvents() {
-    document.querySelectorAll(".songlist li").forEach((li, i) => {
+
+    document.querySelectorAll(".songlist li").forEach((li, index) => {
+
         li.addEventListener("click", () => {
-            currentIndex = i;
-            playmusic(li.dataset.song);
+
+            currentIndex = index;
+
+            const songPath = li.getAttribute("data-song");
+            const playBtn = li.querySelector(".PlayNow img");
+
+            playmusic(songPath, playBtn);
+
+            localStorage.setItem("lastSong", songPath);
+            localStorage.setItem("lastIndex", index);
+
+            document
+                .querySelectorAll(".songlist li")
+                .forEach(el => el.classList.remove("selected"));
+
+            li.classList.add("selected");
+
         });
+
     });
+
 }
 
 // ----------------------
-// Time update (seekbar)
+// Time update
 // ----------------------
 function attachTimeUpdate() {
+
+    if (!audio) return;
+
     audio.addEventListener("timeupdate", () => {
+
+        const progressEl = document.querySelector(".progress");
+        const circleEl = document.querySelector(".circle");
+        const seekbarEl = document.querySelector(".seekbar");
+        const songTimeEl = document.querySelector(".songtime");
+
         if (!audio.duration) return;
 
-        const percent = (audio.currentTime / audio.duration) * 100;
+        const progress = (audio.currentTime / audio.duration) * 100;
 
-        document.querySelector(".progress").style.width = percent + "%";
-        document.querySelector(".circle").style.left = percent + "%";
+        progressEl.style.width = progress + "%";
+        circleEl.style.left = progress + "%";
 
-        const format = (t) =>
-            `${Math.floor(t / 60)}:${Math.floor(t % 60).toString().padStart(2, "0")}`;
+        seekbarEl.style.background =
+            `linear-gradient(to right, #009133 ${progress}%, #444 ${progress}%)`;
 
-        document.querySelector(".songtime").innerText =
-            `${format(audio.currentTime)} / ${format(audio.duration)}`;
+        const formatTime = (seconds) => {
+
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60).toString().padStart(2, "0");
+
+            return `${m}:${s}`;
+        };
+
+        songTimeEl.innerText =
+            `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
     });
 }
 
 // ----------------------
-// Controls
+// Initialize
 // ----------------------
-const playBtn = document.getElementById("play");
-const prevBtn = document.getElementById("previous");
-const nextBtn = document.getElementById("next");
+async function main() {
 
-playBtn.addEventListener("click", () => {
+    playlist = await getSongsFromFolder();
+
+    const songUl = document.querySelector(".songlist ul");
+
+    playlist.forEach((songPath, index) => {
+
+        const displayName = songPath.split("/").pop();
+
+        songUl.insertAdjacentHTML("beforeend", `
+            <li data-song="${songPath}">
+                <img class="invert" src="svg/music-note-03-stroke-rounded.svg" height="24px">
+                <div class="info">
+                    <div>${displayName}</div>
+                    <div>Shashwat</div>
+                </div>
+                <div class="PlayNow">
+                    <span>Play Now</span>
+                    <img class="invert" src="svg/play-circle-stroke-rounded.svg" height="24px">
+                </div>
+            </li>
+        `);
+
+    });
+
+    attachSongEvents();
+
+}
+
+// ----------------------
+// Player controls
+// ----------------------
+const playbarPrev = document.getElementById("previous");
+const playbarPlay = document.getElementById("play");
+const playbarNext = document.getElementById("next");
+
+playbarPlay.addEventListener("click", () => {
     if (!audio) return;
 
-    if (audio.paused) audio.play();
-    else audio.pause();
+    if (audio.paused) {
+        audio.play();
+        playbarPlay.src = "svg/pause-stroke-rounded.svg";
+        if (playButton) playButton.src = "svg/pause-stroke-rounded.svg";
+    } else {
+        audio.pause();
+        playbarPlay.src = "svg/play-circle-stroke-rounded.svg";
+        if (playButton) playButton.src = "svg/play-circle-stroke-rounded.svg";
+    }
 });
 
-function nextSong() {
+playbarPrev.addEventListener("click", () => {
     if (!playlist.length) return;
 
-    currentIndex = (currentIndex + 1) % playlist.length;
-    playmusic(playlist[currentIndex]);
-}
+    currentIndex = (currentIndex > 0) ? currentIndex - 1 : playlist.length - 1;
 
-function prevSong() {
+    const li = document.querySelectorAll(".songlist li")[currentIndex];
+    const playBtn = li.querySelector(".PlayNow img");
+
+    playmusic(playlist[currentIndex], playBtn);
+});
+
+playbarNext.addEventListener("click", () => {
     if (!playlist.length) return;
 
-    currentIndex =
-        currentIndex > 0 ? currentIndex - 1 : playlist.length - 1;
+    currentIndex = (currentIndex < playlist.length - 1) ? currentIndex + 1 : 0;
 
-    playmusic(playlist[currentIndex]);
-}
+    const li = document.querySelectorAll(".songlist li")[currentIndex];
+    const playBtn = li.querySelector(".PlayNow img");
 
-nextBtn.addEventListener("click", nextSong);
-prevBtn.addEventListener("click", prevSong);
+    playmusic(playlist[currentIndex], playBtn);
+});
+
 
 // ----------------------
 // Seekbar click
@@ -200,7 +349,7 @@ searchInput.addEventListener("input", () => {
 // ----------------------
 // Init
 // ----------------------
-async function main() {
+async function init() {
     playlist = await getSongsFromFolder();
 
     const ul = document.querySelector(".songlist ul");
@@ -212,40 +361,8 @@ async function main() {
     attachSongEvents();
 }
 
+
 // ----------------------
-// Show playerbar (AUTO + CLICK + TIMER)
+// Start
 // ----------------------
-let hideTimeout;
-
-function showPlayerBar() {
-    const bar = document.querySelector(".playerbar");
-    if (!bar) return;
-
-    // Show bar
-    bar.classList.add("visible");
-
-    // Clear previous timer
-    if (hideTimeout) clearTimeout(hideTimeout);
-
-    // Hide after 15 seconds
-    hideTimeout = setTimeout(() => {
-        bar.classList.remove("visible");
-    }, 15000);
-}
-
-// Show playerbar when clicking anywhere
-document.addEventListener("click", (e) => {
-    const bar = document.querySelector(".playerbar");
-
-    // Prevent double trigger when clicking inside playerbar
-    if (bar && !bar.contains(e.target)) {
-        showPlayerBar();
-    }
-});
-
-// Show playerbar on page load
-window.addEventListener("load", () => {
-    showPlayerBar();
-});
-
 main();
