@@ -22,7 +22,7 @@ body {
 .left {
     width: 25vw;
     padding: 5px;
-    background-color: rgb(15,15,15);
+    background-color: rgb(15, 15, 15);
     color: white;
 }
 
@@ -32,11 +32,25 @@ body {
     position: relative;
 }
 
-.bg-black { background-color: rgb(5,5,5); }
-.bg-grey { background-color: rgb(15,15,15); }
-.rounded { border-radius: 10px; }
-.m-1 { margin: 5px; }
-.p-1 { padding: 10px; }
+.bg-black {
+    background-color: rgb(5, 5, 5);
+}
+
+.bg-grey {
+    background-color: rgb(15, 15, 15);
+}
+
+.rounded {
+    border-radius: 10px;
+}
+
+.m-1 {
+    margin: 5px;
+}
+
+.p-1 {
+    padding: 10px;
+}
 
 /* ---------------- Logo ---------------- */
 .logo {
@@ -46,7 +60,10 @@ body {
     align-items: center;
     gap: 5px;
 }
-.logo span { font-size: 12px; }
+
+.logo span {
+    font-size: 12px;
+}
 
 /* ---------------- Home & Library ---------------- */
 .home ul li {
@@ -73,18 +90,24 @@ body {
     bottom: 0;
     font-size: 8px;
 }
-.footer a { color: grey; }
+
+.footer a {
+    color: grey;
+}
 
 /* ---------------- Header ---------------- */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(38,37,37);
+    background-color: rgb(38, 37, 37);
     height: 72px;
     padding: 0 16px;
 }
-.buttons>* { margin: 0 12px; }
+
+.buttons>* {
+    margin: 0 12px;
+}
 
 /* ---------------- Cards ---------------- */
 .cardcontainer {
@@ -100,16 +123,21 @@ body {
     position: relative;
     width: 200px;
     height: 280px;
-    background-color: rgb(44,42,42);
+    background-color: rgb(44, 42, 42);
     border-radius: 6px;
     padding: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.card:hover { background-color: rgb(2,39,10); }
+.card:hover {
+    background-color: rgb(2, 39, 10);
+}
 
-.card img { width: 100%; object-fit: cover; }
+.card img {
+    width: 100%;
+    object-fit: cover;
+}
 
 .play {
     position: absolute;
@@ -118,7 +146,7 @@ body {
     width: 50px;
     height: 40px;
     border-radius: 50%;
-    background-color: rgb(70,190,0);
+    background-color: rgb(70, 190, 0);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -126,7 +154,9 @@ body {
     transition: all 0.5s ease;
 }
 
-.card:hover .play { opacity: 1; }
+.card:hover .play {
+    opacity: 1;
+}
 
 /* ---------------- Search ---------------- */
 .Search {
@@ -139,6 +169,7 @@ body {
     border-radius: 25px;
     width: 280px;
 }
+
 .Search input {
     border: none;
     outline: none;
@@ -148,14 +179,18 @@ body {
 
 /* ---------------- Buttons ---------------- */
 .signupbtn {
-    background-color: rgb(38,37,37);
-    color: rgb(73,71,71);
+    background-color: rgb(38, 37, 37);
+    color: rgb(73, 71, 71);
     border: none;
     font-weight: bolder;
     cursor: pointer;
     font-size: 16px;
 }
-.signupbtn:hover { color: white; font-size: 17px; }
+
+.signupbtn:hover {
+    color: white;
+    font-size: 17px;
+}
 
 .loginbtn {
     background-color: white;
@@ -167,7 +202,11 @@ body {
     width: 80px;
     padding: 10px;
 }
-.loginbtn:hover { font-weight: bold; font-size: 17px; }
+
+.loginbtn:hover {
+    font-weight: bold;
+    font-size: 17px;
+}
 
 /* ---------------- Player Bar ---------------- */
 .playerbar {
@@ -186,9 +225,14 @@ body {
     pointer-events: none;
     z-index: 1000;
 }
+
+.playerbar {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
 .playerbar.visible {
     opacity: 1;
-    pointer-events: auto;
 }
 
 .abovebar {
@@ -198,7 +242,11 @@ body {
     gap: 136px;
 }
 
-.songinfo, .songtime { color: white; font-weight: 700; }
+.songinfo,
+.songtime {
+    color: white;
+    font-weight: 700;
+}
 
 /* ---------------- Seekbar ---------------- */
 .seekbar {
@@ -231,43 +279,117 @@ body {
 }
 
 /* ---------------- Song List ---------------- */
-.songlist ul { padding: 20px 0; }
+.songlist ul {
+    padding: 20px 0;
+}
+
 .songlist ul li {
     list-style: decimal;
     padding: 12px;
     margin: 8px 0;
     border-radius: 8px;
-    background-color: rgba(255,255,255,0.05);
+    background-color: rgba(255, 255, 255, 0.05);
     display: flex;
     justify-content: space-between;
     cursor: pointer;
     transition: 0.2s;
 }
+
 .songlist ul li:hover,
 .songlist ul li.selected {
-    background-color: rgb(70,190,0);
+    background-color: rgb(70, 190, 0);
     color: black;
     transform: translateX(3px);
 }
 
 /* ---------------- Scrollbars ---------------- */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar {
+    width: 6px;
+}
+
 ::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     backdrop-filter: blur(10px);
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
 
 /* ---------------- Responsive ---------------- */
-@media(max-width: 768px){
-    .left { position: fixed; left: -100%; width: 70%; top:0; height: 100vh; overflow-y:auto; transition: left 0.3s; }
-    .left.active { left:0; }
-    .overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); opacity:0; visibility:hidden; transition: 0.3s; z-index:999; }
-    .overlay.active { opacity:1; visibility: visible; }
-    .right { width: 100% !important; margin:0; padding:15px; }
-    .cardcontainer { justify-content: center; gap:12px; }
-    .card { width: 45%; min-width: 200px; height:auto; }
-    .playerbar { width: 84%; bottom: 30px; left:50%; transform: translateX(-50%); padding:23px; border-radius:8px; }
-    .abovebar { flex-direction: column; gap:20px; }
+@media(max-width: 768px) {
+    .left {
+        position: fixed;
+        left: -100%;
+        width: 70%;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        transition: left 0.3s;
+    }
+
+    .left.active {
+        left: 0;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        z-index: 999;
+    }
+
+    .overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .right {
+        width: 100% !important;
+        margin: 0;
+        padding: 15px;
+    }
+
+    .cardcontainer {
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .card {
+        width: 45%;
+        min-width: 200px;
+        height: auto;
+    }
+
+    .playerbar {
+        width: 84%;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 23px;
+        border-radius: 8px;
+    }
+
+    .playerbar.visible {
+        opacity: 1;
+    }
+
+    .abovebar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 136px;
+    }
+
+    .abovebar {
+        flex-direction: column;
+        gap: 20px;
+    }
 }
