@@ -7,14 +7,6 @@ let playlist = [];
 let currentIndex = -1;
 
 // ----------------------
-// Show playerbar
-// ----------------------
-function showPlayerBar() {
-    const bar = document.querySelector(".playerbar");
-    if (bar) bar.classList.add("visible");
-}
-
-// ----------------------
 // Fetch songs
 // ----------------------
 async function getSongsFromFolder(folderName = "") {
@@ -219,5 +211,41 @@ async function main() {
 
     attachSongEvents();
 }
+
+// ----------------------
+// Show playerbar (AUTO + CLICK + TIMER)
+// ----------------------
+let hideTimeout;
+
+function showPlayerBar() {
+    const bar = document.querySelector(".playerbar");
+    if (!bar) return;
+
+    // Show bar
+    bar.classList.add("visible");
+
+    // Clear previous timer
+    if (hideTimeout) clearTimeout(hideTimeout);
+
+    // Hide after 15 seconds
+    hideTimeout = setTimeout(() => {
+        bar.classList.remove("visible");
+    }, 15000);
+}
+
+// Show playerbar when clicking anywhere
+document.addEventListener("click", (e) => {
+    const bar = document.querySelector(".playerbar");
+
+    // Prevent double trigger when clicking inside playerbar
+    if (bar && !bar.contains(e.target)) {
+        showPlayerBar();
+    }
+});
+
+// Show playerbar on page load
+window.addEventListener("load", () => {
+    showPlayerBar();
+});
 
 main();
