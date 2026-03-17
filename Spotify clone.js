@@ -20,15 +20,12 @@ function cleanUrl(url) {
 // Fetch songs from JSON
 // ----------------------
 async function getSongsFromFolder(folderName = "") {
-    // Fetch your songs.json file from the public folder
     const response = await fetch('/songs.json');
     const json = await response.json();
 
     if (!folderName) {
-        // Return top-level "songs"
         return json.songs || [];
     } else {
-        // Return songs from subfolder if exists
         return json[folderName] || [];
     }
 }
@@ -61,12 +58,16 @@ async function loadFolder(folderName) {
     });
 
     attachSongEvents();
+
+    // ✅ NEW: auto open sidebar in mobile
+    openSidebar();
 }
 
 // ----------------------
 // Play music
 // ----------------------
 function playmusic(songPath, playBtnElement) {
+
     if (currentSongName === songPath) {
         if (audio.paused) {
             audio.play();
@@ -86,6 +87,7 @@ function playmusic(songPath, playBtnElement) {
             playButton.src = "svg/play-circle-stroke-rounded.svg";
     }
 
+    // ✅ FIXED template string
     audio = new Audio(`songs/${songPath}`);
     audio.play();
 
@@ -144,9 +146,11 @@ function attachTimeUpdate() {
         if (!audio.duration) return;
 
         const progress = (audio.currentTime / audio.duration) * 100;
+
         progressEl.style.width = progress + "%";
         circleEl.style.left = progress + "%";
 
+        // ✅ FIXED template string
         seekbarEl.style.background =
             `linear-gradient(to right, #009133 ${progress}%, #444 ${progress}%)`;
 
@@ -172,6 +176,7 @@ async function main() {
 
     playlist.forEach((songPath, index) => {
         const displayName = songPath.split("/").pop();
+
         songUl.insertAdjacentHTML("beforeend", `
             <li data-song="${songPath}">
                 <img class="invert" src="svg/music-note-03-stroke-rounded.svg" height="24px">
@@ -191,15 +196,15 @@ async function main() {
 }
 
 // ----------------------
-// Player controls, seekbar, search, sidebar
+// Player controls
 // ----------------------
-// (keep all your previous code exactly as it is, no changes needed)
 const playbarPrev = document.getElementById("previous");
 const playbarPlay = document.getElementById("play");
 const playbarNext = document.getElementById("next");
 
 playbarPlay.addEventListener("click", () => {
     if (!audio) return;
+
     if (audio.paused) {
         audio.play();
         playbarPlay.src = "svg/pause-stroke-rounded.svg";
@@ -213,106 +218,115 @@ playbarPlay.addEventListener("click", () => {
 
 playbarPrev.addEventListener("click", () => {
     if (!playlist.length) return;
+
     currentIndex = (currentIndex > 0) ? currentIndex - 1 : playlist.length - 1;
-    const songPath = playlist[currentIndex];
+
     const li = document.querySelectorAll(".songlist li")[currentIndex];
     const playBtn = li.querySelector(".PlayNow img");
-    playmusic(songPath, playBtn);
+
+    playmusic(playlist[currentIndex], playBtn);
 });
 
 playbarNext.addEventListener("click", () => {
     if (!playlist.length) return;
+
     currentIndex = (currentIndex < playlist.length - 1) ? currentIndex + 1 : 0;
-    const songPath = playlist[currentIndex];
+
     const li = document.querySelectorAll(".songlist li")[currentIndex];
     const playBtn = li.querySelector(".PlayNow img");
-    playmusic(songPath, playBtn);
+
+    playmusic(playlist[currentIndex], playBtn);
 });
 
 // ----------------------
-// Rest of sidebar, seekbar, search, click handlers
-// ----------------------
-// (keep your original code unchanged)
-
-// ----------------------
-// Sidebar
+// Sidebar controls
 // ----------------------
 const hamburger = document.getElementById("hamburger");
 const sidebar = document.querySelector(".left");
 const overlay = document.getElementById("overlay");
 
-hamburger.addEventListener("click", () => {
-
-    hamburger.classList.toggle("active");
-    sidebar.classList.toggle("active");
-    overlay.classList.toggle("active");
-
+function openSidebar() {
+    hamburger.classList.add("active");
+    sidebar.classList.add("active");
+    overlay.classList.add("active");
     hamburger.classList.add("hide");
+}
 
-});
-
-overlay.addEventListener("click", () => {
-
+function closeSidebar() {
     hamburger.classList.remove("active");
     sidebar.classList.remove("active");
     overlay.classList.remove("active");
-
     hamburger.classList.remove("hide");
+}
 
+hamburger.addEventListener("click", () => {
+    openSidebar();
+});
+
+overlay.addEventListener("click", () => {
+    closeSidebar();
 });
 
 // ----------------------
 // Card click -> load folder songs
 // ----------------------
 document.querySelectorAll(".card").forEach(card => {
-
     card.addEventListener("click", () => {
-
         const folder = card.dataset.folder;
-
         if (!folder) return;
 
         loadFolder(folder);
-
     });
-
 });
 
-let playerbar = document.querySelector(".playerbar");
-let hideTimeout;
+// ----------------------
+// ✅ NEW: SEEKBAR CLICK FIX
+// ----------------------
+const seekbar = document.querySelector(".seekbar");
 
-// Function to show playerbar
-function showPlayerbar() {
-    // Add visible class
-    playerbar.classList.add("visible");
+seekbar.addEventListener("click", (e) => {
+    if (!audio || !audio.duration) return;
 
-    // Clear any existing timeout
-    if (hideTimeout) clearTimeout(hideTimeout);
+    const rect = seekbar.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
 
-    // Set timeout to hide after 20s
-    hideTimeout = setTimeout(() => {
-        playerbar.classList.remove("visible");
-    }, 20000); // 20 seconds
+    audio.currentTime = percent * audio.duration;
+});
+
+// ----------------------
+// ✅ NEW: SEARCH FEATURE
+// ----------------------
+const searchInput = document.getElementById("search");
+
+if (searchInput) {
+    searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+
+        const filtered = playlist.filter(song =>
+            song.toLowerCase().includes(query)
+        );
+
+        const songUl = document.querySelector(".songlist ul");
+        songUl.innerHTML = "";
+
+        filtered.forEach((songPath, index) => {
+            const name = songPath.split("/").pop();
+
+            songUl.insertAdjacentHTML("beforeend", `
+                <li data-song="${songPath}">
+                    <div>${name}</div>
+                </li>
+            `);
+        });
+
+        attachSongEvents();
+
+        // ✅ open sidebar on search
+        openSidebar();
+    });
 }
-
-// Click anywhere on screen to show the playerbar
-document.addEventListener("click", (e) => {
-    // Prevent showing if clicking inside playerbar itself
-    if (!playerbar.contains(e.target)) {
-        showPlayerbar();
-    }
-});
-
-// Optional: clicking the playerbar itself also resets timer
-playerbar.addEventListener("click", () => {
-    showPlayerbar();
-});
-
-// Initially show playerbar for first 20s
-showPlayerbar();
 
 // ----------------------
 // Start
 // ----------------------
-
 main();
