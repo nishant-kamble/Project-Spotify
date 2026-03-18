@@ -224,20 +224,47 @@ playbarNext.addEventListener("click", () => {
 });
 
 // ----------------------
-// Seekbar click
+// Seekbar click + drag + touch support
 // ----------------------
 const seekbar = document.querySelector(".seekbar");
+
 if (seekbar) {
-    seekbar.addEventListener("click", (e) => {
+    let isDragging = false;
+
+    const seekAudio = (clientX) => {
         if (!audio || !audio.duration) return;
-
         const rect = seekbar.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-
+        let percent = (clientX - rect.left) / rect.width;
+        percent = Math.max(0, Math.min(1, percent));
         audio.currentTime = percent * audio.duration;
+    };
+
+    // Click or tap
+    seekbar.addEventListener("click", (e) => {
+        seekAudio(e.clientX);
+    });
+
+    // Pointer (drag) support
+    seekbar.addEventListener("pointerdown", (e) => {
+        isDragging = true;
+        seekAudio(e.clientX);
+        e.preventDefault();
+    });
+
+    document.addEventListener("pointermove", (e) => {
+        if (isDragging) seekAudio(e.clientX);
+    });
+
+    document.addEventListener("pointerup", () => {
+        isDragging = false;
+    });
+
+    // Touch support
+    seekbar.addEventListener("touchstart", (e) => {
+        seekAudio(e.touches[0].clientX);
+        e.preventDefault();
     });
 }
-
 // ----------------------
 // Sidebar
 // ----------------------
