@@ -160,6 +160,40 @@ async function main() {
 }
 
 // ----------------------
+// Playerbar visibility
+// ----------------------
+let playerbar = document.querySelector(".playerbar");
+let hideTimeout;
+
+function showPlayerbar() {
+    if (!playerbar) return;
+
+    playerbar.classList.add("visible");
+
+    if (hideTimeout) clearTimeout(hideTimeout);
+
+    hideTimeout = setTimeout(() => {
+        playerbar.classList.remove("visible");
+    }, 20000);
+}
+
+document.addEventListener("click", (e) => {
+    if (playerbar && !playerbar.contains(e.target)) {
+        showPlayerbar();
+    }
+});
+
+if (playerbar) {
+    playerbar.addEventListener("click", () => {
+        showPlayerbar();
+    });
+}
+
+showPlayerbar();
+
+
+
+// ----------------------
 // Player controls (FIXED)
 // ----------------------
 const playbarPrev = document.getElementById("previous");
