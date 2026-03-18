@@ -3,13 +3,12 @@ Spotify Clone 🎵 – A fully responsive, mobile-friendly music player built wi
 
 
 
-🐞 Bug Fix Report
-Fixed previous/next buttons to work correctly for songs inside folders and subfolders.
-Updated playlist handling to respect folder paths in JSON structure.
-Fixed play/pause sync between song list icons and playerbar buttons.
-Fixed seekbar functionality for PC click, touchscreen, and drag interactions.
-Ensured song progress updates correctly with time, progress bar, and circle indicator.
-Fixed sidebar toggle and mobile card click behavior.
-Ensured playerbar visibility toggle works consistently on click and auto-hide.
-Updated dynamic song loading to use JSON structure correctly (songs, SitaRam, Punjabi, etc.).
-Fixed audio onended event to trigger next song correctly in all folders.
+🐞 Bug Fixes
+<> Prev/Next works in all folders.
+<> Play/Pause synced with playerbar.
+<> Seekbar works on PC, touch, and drag.
+<> Song progress and time display fixed.
+<> Sidebar and mobile card clicks fixed.
+<> Playerbar auto-hide and visibility fixed.
+<> Dynamic song loading from JSON fixed.
+<> Next song auto-play on end fixed.
